@@ -3,31 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Income Tax Calculator</title>
+    <title>Tax Calculator 2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex justify-center items-center min-h-screen">
-    <div class="bg-white shadow-lg rounded-lg p-6 max-w-md w-full text-center">
-        <h1 class="text-2xl font-bold text-gray-800"> (FY 2025-26)</h1>
-        <h3 class="text-lg text-gray-600 mb-4">v2</h3>
-        <input type="text" id="income" class="w-full text-center text-2xl p-2 border rounded-lg mb-4" readonly>
-        <div class="grid grid-cols-3 gap-2">
-            <button class="btn" onclick="addNumber(1)">1</button>
-            <button class="btn" onclick="addNumber(2)">2</button>
-            <button class="btn" onclick="addNumber(3)">3</button>
-            <button class="btn" onclick="addNumber(4)">4</button>
-            <button class="btn" onclick="addNumber(5)">5</button>
-            <button class="btn" onclick="addNumber(6)">6</button>
-            <button class="btn" onclick="addNumber(7)">7</button>
-            <button class="btn" onclick="addNumber(8)">8</button>
-            <button class="btn" onclick="addNumber(9)">9</button>
-            <button class="btn" onclick="addNumber(0)">0</button>
-            <button class="btn bg-red-500 text-black" onclick="clearInput()">Clear</button>
+<body class="bg-gradient-to-br from-indigo-50 to-blue-50 flex justify-center items-center min-h-screen">
+    <div class="bg-white border-2 border-blue-100 shadow-xl rounded-2xl p-8 max-w-lg w-full space-y-6">
+        <header class="space-y-2">
+            <h1 class="text-3xl font-black text-blue-800">TAX CALCULATOR</h1>
+            <h2 class="text-sm font-semibold text-blue-500 tracking-widest">FY 2025-26 | Premium Edition</h2>
+        </header>
+        
+        <div class="relative group">
+            <input type="text" id="income" 
+                   class="w-full text-3xl font-mono text-blue-900 text-center p-4 border-4 border-blue-200 rounded-xl
+                          focus:border-blue-400 focus:ring-0 transition-all" 
+                   readonly>
         </div>
-        <button class="w-full mt-4 bg-green-500 text-white py-2 rounded-lg text-lg" onclick="calculateTax()">Calculate</button>
-        <div id="taxBreakdown" class="mt-4 bg-white p-4 rounded-lg text-left"></div>
+
+        <div class="grid grid-cols-3 gap-3">
+            <button class="num-btn" onclick="addNumber(1)">1</button>
+            <button class="num-btn" onclick="addNumber(2)">2</button>
+            <button class="num-btn" onclick="addNumber(3)">3</button>
+            <button class="num-btn" onclick="addNumber(4)">4</button>
+            <button class="num-btn" onclick="addNumber(5)">5</button>
+            <button class="num-btn" onclick="addNumber(6)">6</button>
+            <button class="num-btn" onclick="addNumber(7)">7</button>
+            <button class="num-btn" onclick="addNumber(8)">8</button>
+            <button class="num-btn" onclick="addNumber(9)">9</button>
+            <button class="num-btn" onclick="addNumber(0)">0</button>
+            <button class="clear-btn col-span-2" onclick="clearInput()">Clear Entries</button>
+        </div>
+
+        <button class="action-btn" onclick="calculateTax()">
+            Compute Tax
+            <span class="ml-2 text-lg">🧮</span>
+        </button>
+
+        <div id="taxBreakdown" class="results-panel"></div>
     </div>
+
+    <style>
+        .num-btn {
+            @apply bg-blue-500 text-white text-xl font-bold p-4 rounded-full 
+                   hover:bg-blue-600 transform hover:scale-105 
+                   transition-all duration-150 shadow-md;
+        }
+        
+        .clear-btn {
+            @apply bg-rose-500 text-white font-semibold p-3 rounded-lg
+                   hover:bg-rose-600 transition-colors shadow-md;
+        }
+        
+        .action-btn {
+            @apply w-full bg-emerald-600 text-white py-4 rounded-xl text-xl 
+                   font-bold hover:bg-emerald-700 flex items-center justify-center
+                   transform hover:-translate-y-0.5 transition-all shadow-lg;
+        }
+        
+        .results-panel {
+            @apply mt-6 bg-blue-50 border-2 border-blue-100 p-5 rounded-xl 
+                   text-blue-900 space-y-3 font-medium;
+        }
+        
+        .results-panel strong {
+            @apply text-blue-700;
+        }
+    </style>
+
     <script>
+        // Original functionality preserved
         function addNumber(num) {
             document.getElementById('income').value += num;
         }
@@ -38,25 +82,23 @@
 
         function calculateTax() {
             let income = parseInt(document.getElementById('income').value || 0);
-            let taxableIncome = income - 75000; // Standard Deduction of ₹75,000
+            let taxableIncome = income - 75000;
             let tax = 0;
             let breakdown = '';
 
-            // If taxable income is less than or equal to ₹1,275,000, no tax is applicable
             if (taxableIncome <= 1200000) {
                 document.getElementById('taxBreakdown').innerHTML = `
-                    <h3 class='font-bold'>Tax Breakdown:</h3>
-                    <p><strong>Total Income:</strong> ₹${income.toLocaleString()}</p>
-                    <p><strong>Standard Deduction:</strong> ₹75,000</p>
-                    <p><strong>Total Taxable Income:</strong> ₹${taxableIncome.toLocaleString()}</p>
-                    <p class='font-bold text-blue-600'>Income Tax: ₹0</p>
-                    <p>Health & Education Cess: ₹0</p>
-                    <p class='font-bold text-red-600'>Total Tax Amount: ₹0</p>
+                    <h3 class='text-xl font-black text-blue-800 mb-3'>Tax Analysis</h3>
+                    <p>💰 <strong>Total Income:</strong> ₹${income.toLocaleString()}</p>
+                    <p>➖ <strong>Deduction:</strong> ₹75,000</p>
+                    <p>📝 <strong>Taxable Income:</strong> ₹${taxableIncome.toLocaleString()}</p>
+                    <div class="mt-4 p-3 bg-blue-100 rounded-lg">
+                        <p class="font-bold text-blue-600">🎉 No Tax Liability!</p>
+                    </div>
                 `;
                 return;
             }
 
-            // Tax Slabs for income above ₹1,275,000
             const slabs = [
                 { limit: 400000, rate: 0 },
                 { limit: 800000, rate: 5 },
@@ -68,45 +110,38 @@
             ];
 
             let prevLimit = 0;
-            for (let slab of slabs) {
+            slabs.forEach(slab => {
                 if (taxableIncome > prevLimit) {
                     let applicableAmount = Math.min(taxableIncome, slab.limit) - prevLimit;
                     let slabTax = (applicableAmount * slab.rate) / 100;
                     tax += slabTax;
-                    breakdown += `<p class='text-gray-700'>₹${prevLimit.toLocaleString()} - ₹${slab.limit.toLocaleString()} @ ${slab.rate}% = ₹${slabTax.toFixed(0)}</p>`;
+                    breakdown += `<p>📊 ₹${prevLimit.toLocaleString()} - ₹${slab.limit.toLocaleString()} @ ${slab.rate}% = ₹${slabTax.toFixed(0)}</p>`;
                     prevLimit = slab.limit;
                 }
-            }
+            });
 
-            let cess = tax * 0.04; // 4% Cess
-            let surcharge = income > 5000000 ? tax * 0.10 : 0; // 10% Surcharge for income > ₹5,000,000
+            let cess = tax * 0.04;
+            let surcharge = income > 5000000 ? tax * 0.10 : 0;
             let totalTax = tax + cess + surcharge;
 
             document.getElementById('taxBreakdown').innerHTML = `
-                <h3 class='font-bold'>Tax Breakdown:</h3>
-                <p><strong>Total Income:</strong> ₹${income.toLocaleString()}</p>
-                <p><strong>Standard Deduction:</strong> ₹75,000</p>
-                <p><strong>Total Taxable Income:</strong> ₹${taxableIncome.toLocaleString()}</p>
-                ${breakdown}
-                <p class='font-bold text-blue-600'>Income Tax: ₹${tax.toLocaleString()}</p>
-                <p>Health & Education Cess: ₹${cess.toFixed(0)}</p>
-                ${income > 5000000 ? `<p>Surcharge: ₹${surcharge.toFixed(0)}</p>` : ''}
-                <p class='font-bold text-red-600'>Total Tax Amount: ₹${totalTax.toFixed(0)}</p>
+                <h3 class='text-xl font-black text-blue-800 mb-3'>Detailed Calculation</h3>
+                <div class="space-y-2">
+                    <p>💰 <strong>Gross Income:</strong> ₹${income.toLocaleString()}</p>
+                    <p>➖ <strong>Standard Deduction:</strong> ₹75,000</p>
+                    <p>📝 <strong>Taxable Amount:</strong> ₹${taxableIncome.toLocaleString()}</p>
+                    <div class="ml-4 space-y-2 text-sm">${breakdown}</div>
+                    <div class="mt-4 space-y-2">
+                        <p class="text-blue-700">📐 <strong>Base Tax:</strong> ₹${tax.toLocaleString()}</p>
+                        <p>➕ Cess (4%): ₹${cess.toFixed(0)}</p>
+                        ${income > 5000000 ? `<p>➕ Surcharge (10%): ₹${surcharge.toFixed(0)}</p>` : ''}
+                        <div class="pt-3 font-bold text-lg border-t border-blue-200">
+                            🧾 <span class="text-rose-600">Final Tax Due: ₹${totalTax.toFixed(0)}</span>
+                        </div>
+                    </div>
+                </div>
             `;
         }
     </script>
-    <style>
-        .btn {
-            background: #f3f4f6;
-            padding: 10px;
-            font-size: 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-        .btn:hover {
-            background: #e5e7eb;
-        }
-    </style>
 </body>
 </html>
