@@ -107,7 +107,7 @@
             }
             
             let cess = tax * 0.04;
-            let surcharge = tax * 0.10;
+            let surcharge = income > 5000000 ? tax * 0.10 : 0;
             let totalTax = tax + cess + surcharge;
             
             document.getElementById('taxBreakdown').innerHTML = `
@@ -118,7 +118,7 @@
                 ${breakdown}
                 <b>Income Tax: ₹${tax.toLocaleString()}</b><br>
                 Health and Education Cess: ₹${cess.toFixed(0)}<br>
-                Surcharge: ₹${surcharge.toFixed(0)}<br>
+                ${income > 5000000 ? `Surcharge: ₹${surcharge.toFixed(0)}<br>` : ''}
                 <b>Total Tax Amount: ₹${totalTax.toFixed(0)}</b>
             `;
         }
