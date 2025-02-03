@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Income Tax Calculator (FY 2025-26)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px #aaa;
+        }
+        .input-box {
+            width: 100%;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .buttons button {
+            font-size: 18px;
+            padding: 10px;
+        }
+        .submit-btn {
+            width: 100%;
+            font-size: 20px;
+            padding: 10px;
+            background-color: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fffbcc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Indian Income Tax Calculator (FY 2025-26)</h1>
+    <h3>Based on the new 2025 Union Budget</h3>
+    <div class="container">
+        <input type="text" id="income" class="input-box" readonly>
+        <div class="buttons">
+            <button onclick="addNumber(1)">1</button>
+            <button onclick="addNumber(2)">2</button>
+            <button onclick="addNumber(3)">3</button>
+            <button onclick="addNumber(4)">4</button>
+            <button onclick="addNumber(5)">5</button>
+            <button onclick="addNumber(6)">6</button>
+            <button onclick="addNumber(7)">7</button>
+            <button onclick="addNumber(8)">8</button>
+            <button onclick="addNumber(9)">9</button>
+            <button onclick="addNumber(0)">0</button>
+            <button onclick="clearInput()" style="background-color: red; color: white;">Clear</button>
+        </div>
+        <button class="submit-btn" onclick="calculateTax()">Submit</button>
+        <div id="taxBreakdown" class="result"></div>
+    </div>
+    <script>
+        function addNumber(num) {
+            document.getElementById('income').value += num;
+        }
+        function clearInput() {
+            document.getElementById('income').value = '';
+        }
+        function calculateTax() {
+            let income = parseInt(document.getElementById('income').value || 0);
+            let taxableIncome = income - 75000;
+            let tax = 0;
+            let breakdown = '';
+            
+            const slabs = [
+                { limit: 400000, rate: 0 },
+                { limit: 800000, rate: 5 },
+                { limit: 1200000, rate: 10 },
+                { limit: 1600000, rate: 15 },
+                { limit: 2000000, rate: 20 },
+                { limit: 2400000, rate: 25 },
+                { limit: taxableIncome, rate: 30 }
+            ];
+            
+            let prevLimit = 0;
+            for (let slab of slabs) {
+                if (taxableIncome > prevLimit) {
+                    let applicableAmount = Math.min(taxableIncome, slab.limit) - prevLimit;
+                    let slabTax = (applicableAmount * slab.rate) / 100;
+                    tax += slabTax;
+                    breakdown += `₹${prevLimit} - ₹${slab.limit} @ ${slab.rate}% = ₹${slabTax.toFixed(0)}<br>`;
+                    prevLimit = slab.limit;
+                }
+            }
+            
+            let cess = tax * 0.04;
+            let surcharge = tax * 0.10;
+            let totalTax = tax + cess + surcharge;
+            
+            document.getElementById('taxBreakdown').innerHTML = `
+                <b>Tax Breakdown:</b><br>
+                Total Income: ₹${income.toLocaleString()}<br>
+                Standard Deduction: ₹75,000<br>
+                Total Taxable Income: ₹${taxableIncome.toLocaleString()}<br>
+                ${breakdown}
+                <b>Income Tax: ₹${tax.toLocaleString()}</b><br>
+                Health and Education Cess: ₹${cess.toFixed(0)}<br>
+                Surcharge: ₹${surcharge.toFixed(0)}<br>
+                <b>Total Tax Amount: ₹${totalTax.toFixed(0)}</b>
+            `;
+        }
+    </script>
+</body>
+</html>
