@@ -9,7 +9,7 @@
 <body class="bg-gray-100 flex justify-center items-center min-h-screen">
     <div class="bg-white shadow-lg rounded-lg p-6 max-w-md w-full text-center">
         <h1 class="text-2xl font-bold text-gray-800"> (FY 2025-26)</h1>
-        <h3 class="text-lg text-gray-600 mb-4">v1</h3>
+        <h3 class="text-lg text-gray-600 mb-4">v2</h3>
         <input type="text" id="income" class="w-full text-center text-2xl p-2 border rounded-lg mb-4" readonly>
         <div class="grid grid-cols-3 gap-2">
             <button class="btn" onclick="addNumber(1)">1</button>
@@ -31,15 +31,18 @@
         function addNumber(num) {
             document.getElementById('income').value += num;
         }
+
         function clearInput() {
             document.getElementById('income').value = '';
         }
+
         function calculateTax() {
             let income = parseInt(document.getElementById('income').value || 0);
-            let taxableIncome = income - 75000;
+            let taxableIncome = income - 75000; // Standard Deduction of ₹75,000
             let tax = 0;
             let breakdown = '';
 
+            // If taxable income is less than or equal to ₹1,275,000, no tax is applicable
             if (taxableIncome <= 1275000) {
                 document.getElementById('taxBreakdown').innerHTML = `
                     <h3 class='font-bold'>Tax Breakdown:</h3>
@@ -52,7 +55,8 @@
                 `;
                 return;
             }
-            
+
+            // Tax Slabs for income above ₹1,275,000
             const slabs = [
                 { limit: 400000, rate: 0 },
                 { limit: 800000, rate: 5 },
@@ -62,7 +66,7 @@
                 { limit: 2400000, rate: 25 },
                 { limit: taxableIncome, rate: 30 }
             ];
-            
+
             let prevLimit = 0;
             for (let slab of slabs) {
                 if (taxableIncome > prevLimit) {
@@ -73,11 +77,11 @@
                     prevLimit = slab.limit;
                 }
             }
-            
-            let cess = tax * 0.04;
-            let surcharge = income > 5000000 ? tax * 0.10 : 0;
+
+            let cess = tax * 0.04; // 4% Cess
+            let surcharge = income > 5000000 ? tax * 0.10 : 0; // 10% Surcharge for income > ₹5,000,000
             let totalTax = tax + cess + surcharge;
-            
+
             document.getElementById('taxBreakdown').innerHTML = `
                 <h3 class='font-bold'>Tax Breakdown:</h3>
                 <p><strong>Total Income:</strong> ₹${income.toLocaleString()}</p>
