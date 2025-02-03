@@ -3,74 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basic Income Tax Calculator (FY 2025-26)</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
-        }
-        .container {
-            max-width: 500px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 2px 2px 10px #aaa;
-        }
-        .input-box {
-            width: 100%;
-            font-size: 24px;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 5px;
-            margin-bottom: 10px;
-        }
-        .buttons button {
-            font-size: 18px;
-            padding: 10px;
-        }
-        .submit-btn {
-            width: 100%;
-            font-size: 20px;
-            padding: 10px;
-            background-color: green;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .result {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #ffffff;
-            border-radius: 5px;
-        }
-    </style>
+    <title>Income Tax Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>FY 2025-26</h1>
-    <h3>v1</h3>
-    <div class="container">
-        <input type="text" id="income" class="input-box" readonly>
-        <div class="buttons">
-            <button onclick="addNumber(1)">1</button>
-            <button onclick="addNumber(2)">2</button>
-            <button onclick="addNumber(3)">3</button>
-            <button onclick="addNumber(4)">4</button>
-            <button onclick="addNumber(5)">5</button>
-            <button onclick="addNumber(6)">6</button>
-            <button onclick="addNumber(7)">7</button>
-            <button onclick="addNumber(8)">8</button>
-            <button onclick="addNumber(9)">9</button>
-            <button onclick="addNumber(0)">0</button>
-            <button onclick="clearInput()" style="background-color: red; color: white;">Clear</button>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+    <div class="bg-white shadow-lg rounded-lg p-6 max-w-md w-full text-center">
+        <h1 class="text-2xl font-bold text-gray-800"> (FY 2025-26)</h1>
+        <h3 class="text-lg text-gray-600 mb-4">v1</h3>
+        <input type="text" id="income" class="w-full text-center text-2xl p-2 border rounded-lg mb-4" readonly>
+        <div class="grid grid-cols-3 gap-2">
+            <button class="btn" onclick="addNumber(1)">1</button>
+            <button class="btn" onclick="addNumber(2)">2</button>
+            <button class="btn" onclick="addNumber(3)">3</button>
+            <button class="btn" onclick="addNumber(4)">4</button>
+            <button class="btn" onclick="addNumber(5)">5</button>
+            <button class="btn" onclick="addNumber(6)">6</button>
+            <button class="btn" onclick="addNumber(7)">7</button>
+            <button class="btn" onclick="addNumber(8)">8</button>
+            <button class="btn" onclick="addNumber(9)">9</button>
+            <button class="btn" onclick="addNumber(0)">0</button>
+            <button class="btn bg-red-500 text-white" onclick="clearInput()">Clear</button>
         </div>
-        <button class="submit-btn" onclick="calculateTax()">Submit</button>
-        <div id="taxBreakdown" class="result"></div>
+        <button class="w-full mt-4 bg-green-500 text-white py-2 rounded-lg text-lg" onclick="calculateTax()">Calculate</button>
+        <div id="taxBreakdown" class="mt-4 bg-yellow-100 p-4 rounded-lg text-left"></div>
     </div>
     <script>
         function addNumber(num) {
@@ -101,7 +56,7 @@
                     let applicableAmount = Math.min(taxableIncome, slab.limit) - prevLimit;
                     let slabTax = (applicableAmount * slab.rate) / 100;
                     tax += slabTax;
-                    breakdown += `₹${prevLimit} - ₹${slab.limit} @ ${slab.rate}% = ₹${slabTax.toFixed(0)}<br>`;
+                    breakdown += `<p class='text-gray-700'>₹${prevLimit.toLocaleString()} - ₹${slab.limit.toLocaleString()} @ ${slab.rate}% = ₹${slabTax.toFixed(0)}</p>`;
                     prevLimit = slab.limit;
                 }
             }
@@ -111,17 +66,30 @@
             let totalTax = tax + cess + surcharge;
             
             document.getElementById('taxBreakdown').innerHTML = `
-                <b>Tax Breakdown:</b><br>
-                Total Income: ₹${income.toLocaleString()}<br>
-                Standard Deduction: ₹75,000<br>
-                Total Taxable Income: ₹${taxableIncome.toLocaleString()}<br>
+                <h3 class='font-bold'>Tax Breakdown:</h3>
+                <p><strong>Total Income:</strong> ₹${income.toLocaleString()}</p>
+                <p><strong>Standard Deduction:</strong> ₹75,000</p>
+                <p><strong>Total Taxable Income:</strong> ₹${taxableIncome.toLocaleString()}</p>
                 ${breakdown}
-                <b>Income Tax: ₹${tax.toLocaleString()}</b><br>
-                Health and Education Cess: ₹${cess.toFixed(0)}<br>
-                ${income > 5000000 ? `Surcharge: ₹${surcharge.toFixed(0)}<br>` : ''}
-                <b>Total Tax Amount: ₹${totalTax.toFixed(0)}</b>
+                <p class='font-bold text-blue-600'>Income Tax: ₹${tax.toLocaleString()}</p>
+                <p>Health & Education Cess: ₹${cess.toFixed(0)}</p>
+                ${income > 5000000 ? `<p>Surcharge: ₹${surcharge.toFixed(0)}</p>` : ''}
+                <p class='font-bold text-red-600'>Total Tax Amount: ₹${totalTax.toFixed(0)}</p>
             `;
         }
     </script>
+    <style>
+        .btn {
+            background: #f3f4f6;
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .btn:hover {
+            background: #e5e7eb;
+        }
+    </style>
 </body>
 </html>
