@@ -22,10 +22,10 @@
             <button class="btn" onclick="addNumber(8)">8</button>
             <button class="btn" onclick="addNumber(9)">9</button>
             <button class="btn" onclick="addNumber(0)">0</button>
-            <button class="btn bg-red-500 text-black" onclick="clearInput()">Clear</button>
+            <button class="btn bg-red-500 text-white" onclick="clearInput()">Clear</button>
         </div>
         <button class="w-full mt-4 bg-green-500 text-white py-2 rounded-lg text-lg" onclick="calculateTax()">Calculate</button>
-        <div id="taxBreakdown" class="mt-4 bg-white p-4 rounded-lg text-left"></div>
+        <div id="taxBreakdown" class="mt-4 bg-yellow-100 p-4 rounded-lg text-left"></div>
     </div>
     <script>
         function addNumber(num) {
@@ -39,6 +39,19 @@
             let taxableIncome = income - 75000;
             let tax = 0;
             let breakdown = '';
+
+            if (taxableIncome <= 1275000) {
+                document.getElementById('taxBreakdown').innerHTML = `
+                    <h3 class='font-bold'>Tax Breakdown:</h3>
+                    <p><strong>Total Income:</strong> ₹${income.toLocaleString()}</p>
+                    <p><strong>Standard Deduction:</strong> ₹75,000</p>
+                    <p><strong>Total Taxable Income:</strong> ₹${taxableIncome.toLocaleString()}</p>
+                    <p class='font-bold text-blue-600'>Income Tax: ₹0</p>
+                    <p>Health & Education Cess: ₹0</p>
+                    <p class='font-bold text-red-600'>Total Tax Amount: ₹0</p>
+                `;
+                return;
+            }
             
             const slabs = [
                 { limit: 400000, rate: 0 },
